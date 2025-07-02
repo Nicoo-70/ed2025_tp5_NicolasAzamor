@@ -1,25 +1,20 @@
 #include <iostream>
 using namespace std;
 
-typedef struct tnodo *pnodo;
-
 typedef struct tnodo {
     int dato;
-    pnodo siguiente;
-};
+    tnodo* siguiente;
+} *pnodo;
 
 void iniciar_lista(pnodo &lista) {
     lista = NULL;
 }
-void crear_nodo(pnodo &nuevo) {
-    nuevo = new tnodo;
-    if (nuevo != NULL) {
-        cout << "Ingrese valor: ";
-        cin >> nuevo->dato;
-        nuevo->siguiente = NULL;
-    } else {
-        cout << "Memoria insuficiente" << endl;
-    }
+
+pnodo crear_nodo(int valor) {
+    pnodo nuevo = new tnodo;
+    nuevo->dato = valor;
+    nuevo->siguiente = NULL;
+    return nuevo;
 }
 
 void agregar_inicio(pnodo &lista, pnodo nuevo) {
@@ -58,14 +53,9 @@ int main() {
     pnodo lista;
     iniciar_lista(lista);
 
-    int cantidad;
-    cout << "Cuantos nodos desea ingresar: ";
-    cin >> cantidad;
-
-    for (int i = 0; i < cantidad; i++) {
-        pnodo nuevo;
-        crear_nodo(nuevo);
-        agregar_inicio(lista, nuevo);
+    int valores[] = {6, 4, 9, 5, 8};
+    for (int i = 0; i < 5; i++) {
+        agregar_inicio(lista, crear_nodo(valores[i]));
     }
 
     cout << "\nContenido de la lista:\n";

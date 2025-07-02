@@ -1,127 +1,94 @@
 #include <iostream>
 using namespace std;
 
-typedef struct nodo *pnodo;
-
-typedef struct nodo {
+typedef struct tnodo {
     int dato;
-    pnodo siguiente;
-};
+    tnodo* siguiente;
+} *pnodo;
 
-typedef struct lista {
+typedef struct {
     pnodo inicio;
     pnodo final;
     int cantidad;
-};
+} Lista;
 
-void iniciar_lista(lista &l) {
-    l.inicio = NULL;
-    l.final = NULL;
-    l.cantidad = 0;
+void iniciar_lista(Lista &lista) {
+    lista.inicio = NULL;
+    lista.final = NULL;
+    lista.cantidad = 0;
 }
 
-void crear_nodo(pnodo &nuevo, int valor) {
-    nuevo = new nodo;
+pnodo crear_nodo(int valor) {
+    pnodo nuevo = new tnodo;
     if (nuevo != NULL) {
         nuevo->dato = valor;
         nuevo->siguiente = NULL;
     }
+    return nuevo;
 }
-
-void agregar_final(lista &l, pnodo nuevo) {
-    if (l.inicio == NULL) {
-        l.inicio = nuevo;
-        l.final = nuevo;
+void agregar_final(Lista &lista, pnodo nuevo) {
+    if (lista.inicio == NULL) {
+        lista.inicio = nuevo;
+        lista.final = nuevo;
     } else {
-        l.final->siguiente = nuevo;
-        l.final = nuevo;
+        lista.final->siguiente = nuevo;
+        lista.final = nuevo;
     }
-    l.cantidad++;
+    lista.cantidad++;
 }
-
-void agregar_inicio(lista &l, pnodo nuevo) {
-    if (l.inicio == NULL) {
-        l.inicio = nuevo;
-        l.final = nuevo;
-    } else {
-        nuevo->siguiente = l.inicio;
-        l.inicio = nuevo;
-    }
-    l.cantidad++;
-}
-
-pnodo eliminar_inicio(lista &l) {
+pnodo eliminar_inicio(Lista &lista) {
     pnodo borrado;
-    if (l.inicio == NULL) {
+    if (lista.inicio == NULL) {
         borrado = NULL;
     } else {
-        borrado = l.inicio;
-        l.inicio = borrado->siguiente;
-        borrado->siguiente = NULL;
-        if (l.inicio == NULL) {
-            l.final = NULL;
+        borrado = lista.inicio;
+        lista.inicio = borrado->siguiente;
+        if (lista.inicio == NULL) {
+            lista.final = NULL;
         }
-        l.cantidad--;
+        lista.cantidad--;
+        borrado->siguiente = NULL;
     }
     return borrado;
 }
 
-pnodo eliminar_final(lista &l) {
-    pnodo borrado, i;
-    if (l.inicio == NULL) {
-        borrado = NULL;
-    } else if (l.inicio == l.final) {
-        borrado = l.inicio;
-        l.inicio = NULL;
-        l.final = NULL;
-    } else {
-        for (i = l.inicio; i->siguiente != l.final; i = i->siguiente);
-        borrado = l.final;
-        l.final = i;
-        l.final->siguiente = NULL;
-    }
-    l.cantidad--;
-    return borrado;
-}
-
-int cantidad_elementos(lista l) {
-    return l.cantidad;
-}
-
-void mostrar_lista(lista l) {
-    pnodo i;
-    for (i = l.inicio; i != NULL; i = i->siguiente) {
+void mostrar(Lista lista) {
+    pnodo i = lista.inicio;
+    cout << "Lista: ";
+    while (i != NULL) {
         cout << i->dato << " ";
+        i = i->siguiente;
     }
     cout << endl;
 }
 
+int obtener_cantidad(Lista lista) {
+    return lista.cantidad;
+}
+
 int main() {
-    lista l;
-    pnodo nuevo;
+    Lista lista;
+    iniciar_lista(lista);
 
-    iniciar_lista(l);
+    int valores[] = {6, 4, 9, 5, 8};
+    for (int i = 0; i < 5; i++) {
+        agregar_final(lista, crear_nodo(valores[i]));
+    }
 
-    crear_nodo(nuevo, 10);
-    agregar_final(l, nuevo);
+    cout << "Contenido de la lista:\n";
+    mostrar(lista);
+    cout << "Cantidad de elementos: " << obtener_cantidad(lista) << endl;
 
-    crear_nodo(nuevo, 20);
-    agregar_final(l, nuevo);
+    cout << "\nEliminando un nodo del inicio...\n";
+    pnodo eliminado = eliminar_inicio(lista);
+    if (eliminado != NULL) {
+        cout << "Nodo eliminado: " << eliminado->dato << endl;
+        delete eliminado;
+    }
 
-    crear_nodo(nuevo, 5);
-    agregar_inicio(l, nuevo);
-
-    mostrar_lista(l);
-
-    cout << "Cantidad de elementos: " << cantidad_elementos(l) << endl;
-
-    eliminar_inicio(l);
-    mostrar_lista(l);
-
-    eliminar_final(l);
-    mostrar_lista(l);
-
-    cout << "Cantidad final: " << cantidad_elementos(l) << endl;
+    cout << "Lista actualizada:\n";
+    mostrar(lista);
+    cout << "Cantidad actual: " << obtener_cantidad(lista) << endl;
 
     return 0;
 }

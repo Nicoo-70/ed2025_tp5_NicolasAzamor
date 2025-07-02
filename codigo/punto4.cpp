@@ -5,6 +5,7 @@ typedef struct tnodo {
     int dato;
     tnodo* siguiente;
 } *pnodo;
+
 typedef struct {
     pnodo tope;
 } Pila;
@@ -12,42 +13,41 @@ typedef struct {
 void iniciar_pila(Pila &p) {
     p.tope = NULL;
 }
+
 pnodo crear_nodo(int valor) {
     pnodo nuevo = new tnodo;
-    if (nuevo != NULL) {
-        nuevo->dato = valor;
-        nuevo->siguiente = NULL;
-    }
+    nuevo->dato = valor;
+    nuevo->siguiente = NULL;
     return nuevo;
 }
+
 void apilar(Pila &p, int valor) {
     pnodo nuevo = crear_nodo(valor);
     nuevo->siguiente = p.tope;
     p.tope = nuevo;
 }
+
 int desapilar(Pila &p) {
     if (p.tope == NULL) return -1;
     pnodo borrado = p.tope;
     int valor = borrado->dato;
-    p.tope = p.tope->siguiente;
+    p.tope = borrado->siguiente;
     delete borrado;
     return valor;
 }
 void mostrar_pila(Pila p) {
-    pnodo i = p.tope;
     cout << "Pila: ";
-    while (i != NULL) {
+    for (pnodo i = p.tope; i != NULL; i = i->siguiente) {
         cout << i->dato << " ";
-        i = i->siguiente;
     }
     cout << endl;
 }
-// COLA
 typedef struct {
     pnodo frente;
     pnodo final;
     int cantidad;
 } Cola;
+
 void iniciar_cola(Cola &c) {
     c.frente = NULL;
     c.final = NULL;
@@ -64,26 +64,29 @@ void encolar(Cola &c, int valor) {
     }
     c.cantidad++;
 }
+
 int desencolar(Cola &c) {
     if (c.frente == NULL) return -1;
     pnodo borrado = c.frente;
     int valor = borrado->dato;
-    c.frente = c.frente->siguiente;
-    if (c.frente == NULL) c.final = NULL;
+    c.frente = borrado->siguiente;
+    if (c.frente == NULL) {
+        c.final = NULL;
+    }
     delete borrado;
     c.cantidad--;
     return valor;
 }
+
 void mostrar_cola(Cola c) {
-    pnodo i = c.frente;
     cout << "Cola: ";
-    while (i != NULL) {
+    for (pnodo i = c.frente; i != NULL; i = i->siguiente) {
         cout << i->dato << " ";
-        i = i->siguiente;
     }
     cout << endl;
     cout << "Cantidad de elementos: " << c.cantidad << endl;
 }
+
 int main() {
     Pila pila;
     Cola cola;
@@ -91,19 +94,24 @@ int main() {
     iniciar_pila(pila);
     iniciar_cola(cola);
 
-    apilar(pila, 10);
-    apilar(pila, 20);
-    apilar(pila, 30);
+    int valores[] = {6, 4, 9, 5, 8};
 
+    for (int i = 0; i < 5; i++) {
+        apilar(pila, valores[i]);
+    }
+
+    for (int i = 0; i < 5; i++) {
+        encolar(cola, valores[i]);
+    }
+    cout << "\nContenido de la pila:\n";
     mostrar_pila(pila);
+
     cout << "Desapilo: " << desapilar(pila) << endl;
     mostrar_pila(pila);
 
-    encolar(cola, 100);
-    encolar(cola, 200);
-    encolar(cola, 300);
-
+    cout << "\nContenido de la cola:\n";
     mostrar_cola(cola);
+
     cout << "Desencolo: " << desencolar(cola) << endl;
     mostrar_cola(cola);
 

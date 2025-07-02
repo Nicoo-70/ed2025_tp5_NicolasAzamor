@@ -8,10 +8,8 @@ typedef struct tnodo {
 
 pnodo crear_nodo(int valor) {
     pnodo nuevo = new tnodo;
-    if (nuevo != NULL) {
-        nuevo->dato = valor;
-        nuevo->siguiente = NULL;
-    }
+    nuevo->dato = valor;
+    nuevo->siguiente = NULL;
     return nuevo;
 }
 
@@ -24,12 +22,11 @@ void agregar_final(pnodo &lista, pnodo nuevo) {
         i->siguiente = nuevo;
     }
 }
+
 void mostrar_lista(pnodo lista) {
-    pnodo i = lista;
     cout << "Lista: ";
-    while (i != NULL) {
+    for (pnodo i = lista; i != NULL; i = i->siguiente) {
         cout << i->dato << " ";
-        i = i->siguiente;
     }
     cout << endl;
 }
@@ -57,6 +54,7 @@ pnodo combinar_sin_orden(pnodo l1, pnodo l2) {
         agregar_final(resultado, crear_nodo(i->dato));
     return resultado;
 }
+
 pnodo combinar_con_orden(pnodo l1, pnodo l2) {
     pnodo resultado = NULL;
     pnodo i = l1;
@@ -84,41 +82,15 @@ pnodo combinar_con_orden(pnodo l1, pnodo l2) {
 
     return resultado;
 }
-
-// main
 int main() {
     pnodo lista1 = NULL;
     pnodo lista2 = NULL;
 
-    // cargo lista 1
-    agregar_final(lista1, crear_nodo(7));
-    agregar_final(lista1, crear_nodo(2));
-    agregar_final(lista1, crear_nodo(9));
-    agregar_final(lista1, crear_nodo(1));
+    int valores[] = {6, 4, 9, 5, 8};
 
-    agregar_final(lista2, crear_nodo(8));
-    agregar_final(lista2, crear_nodo(3));
-    agregar_final(lista2, crear_nodo(5));
+    for (int i = 0; i < 5; i++) {
+        agregar_final(lista1, crear_nodo(valores[i]));
+        agregar_final(lista2, crear_nodo(valores[i]));
+    }
 
-    cout << "\nLista 1 original: ";
-    mostrar_lista(lista1);
-    cout << "Lista 2 original: ";
-    mostrar_lista(lista2);
-
-    ordenar_seleccion(lista1);
-    ordenar_seleccion(lista2);
-
-    cout << "\nLista 1 ordenada: ";
-    mostrar_lista(lista1);
-    cout << "Lista 2 ordenada: ";
-    mostrar_lista(lista2);
-
-    pnodo lista_combinada1 = combinar_sin_orden(lista1, lista2);
-    cout << "\nListas combinadas sin importar orden:\n";
-    mostrar_lista(lista_combinada1);
-    pnodo lista_combinada2 = combinar_con_orden(lista1, lista2);
-    cout << "\nListas combinadas conservando orden:\n";
-    mostrar_lista(lista_combinada2);
-
-    return 0;
-}
+    cout << "Lista 1 original: ";

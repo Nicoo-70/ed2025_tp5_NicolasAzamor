@@ -1,109 +1,96 @@
 #include <iostream>
 using namespace std;
 
-typedef struct nodo *pnodo;
-
-typedef struct nodo {
+typedef struct tnodo {
     int dato;
-    pnodo siguiente;
-};
+    tnodo* siguiente;
+} *pnodo;
 
-typedef struct lista {
+typedef struct {
     pnodo inicio;
     pnodo final;
     int cantidad;
-};
-void iniciar_lista(lista &l) {
-    l.inicio = NULL;
-    l.final = NULL;
-    l.cantidad = 0;
+} Lista;
+void iniciar_lista(Lista &lista) {
+    lista.inicio = NULL;
+    lista.final = NULL;
+    lista.cantidad = 0;
+}
+pnodo crear_nodo(int valor) {
+    pnodo nuevo = new tnodo;
+    nuevo->dato = valor;
+    nuevo->siguiente = NULL;
+    return nuevo;
 }
 
-void crear_nodo(pnodo &nuevo, int valor) {
-    nuevo = new nodo;
-    if (nuevo != NULL) {
-        nuevo->dato = valor;
-        nuevo->siguiente = NULL;
-    }
-}
-
-void agregar_final(lista &l, pnodo nuevo) {
-    if (l.inicio == NULL) {
-        l.inicio = nuevo;
-        l.final = nuevo;
+void agregar_final(Lista &lista, pnodo nuevo) {
+    if (lista.inicio == NULL) {
+        lista.inicio = nuevo;
+        lista.final = nuevo;
     } else {
-        l.final->siguiente = nuevo;
-        l.final = nuevo;
+        lista.final->siguiente = nuevo;
+        lista.final = nuevo;
     }
-    l.cantidad++;
+    lista.cantidad++;
 }
-void mostrar_lista(lista l) {
-    pnodo i;
-    for (i = l.inicio; i != NULL; i = i->siguiente) {
+void mostrar(Lista lista) {
+    pnodo i = lista.inicio;
+    cout << "Lista: ";
+    while (i != NULL) {
         cout << i->dato << " ";
+        i = i->siguiente;
     }
     cout << endl;
 }
-int buscar_indice(lista l, int valor) {
-    pnodo i = l.inicio;
-    int pos = 0;
+int buscar_indice(Lista lista, int valor) {
+    pnodo i = lista.inicio;
+    int indice = 0;
     while (i != NULL) {
-        if (i->dato == valor) {
-            return pos;
-        }
+        if (i->dato == valor)
+            return indice;
         i = i->siguiente;
-        pos++;
+        indice++;
     }
-    return -1;
+    return -1;  
 }
 
-pnodo buscar_por_indice(lista l, int indice) {
-    if (indice < 0 || indice >= l.cantidad) {
+pnodo buscar_por_indice(Lista lista, int posicion) {
+    if (posicion < 0 || posicion >= lista.cantidad)
         return NULL;
-    }
-    pnodo i = l.inicio;
-    int pos = 0;
-    while (i != NULL && pos < indice) {
+
+    pnodo i = lista.inicio;
+    int actual = 0;
+    while (i != NULL) {
+        if (actual == posicion)
+            return i;
         i = i->siguiente;
-        pos++;
+        actual++;
     }
-    return i;
+    return NULL;
 }
+
 int main() {
-    lista l;
-    pnodo nuevo;
+    Lista lista;
+    iniciar_lista(lista);
 
-    iniciar_lista(l);
-
-    crear_nodo(nuevo, 8);
-    agregar_final(l, nuevo);
-
-    crear_nodo(nuevo, 15);
-    agregar_final(l, nuevo);
-
-    crear_nodo(nuevo, 23);
-    agregar_final(l, nuevo);
-
-    crear_nodo(nuevo, 42);
-    agregar_final(l, nuevo);
-
-    mostrar_lista(l); // salida esperada: 8 15 23 42
-
-    int indice = buscar_indice(l, 23);
-    cout << "El valor 23 esta en la posicion: " << indice << endl; // salida esperada: 2
-
-    pnodo resultado = buscar_por_indice(l, 3);
-    if (resultado != NULL) {
-        cout << "El valor en la posicion 3 es: " << resultado->dato << endl; // salida esperada: 42
-    } else {
-        cout << "Indice fuera de rango" << endl;
+    int valores[] = {6, 4, 9, 5, 8};
+    for (int i = 0; i < 5; i++) {
+        agregar_final(lista, crear_nodo(valores[i]));
     }
 
-    resultado = buscar_por_indice(l, 5);
-    if (resultado != NULL) {
-        cout << "El valor en la posicion 5 es: " << resultado->dato << endl;
+    cout << "Contenido de la lista:\n";
+    mostrar(lista);
+
+    int valorBuscado = 5;
+    int pos = buscar_indice(lista, valorBuscado);
+    cout << "\nBuscar valor " << valorBuscado << ": índice = " << pos << endl;
+
+    int indiceBuscado = 2;
+    pnodo nodo = buscar_por_indice(lista, indiceBuscado);
+    if (nodo != NULL) {
+        cout << "Nodo en índice " << indiceBuscado << ": " << nodo->dato << endl;
     } else {
-        cout << "Indice fuera de rango" << endl; // salida esperada
+        cout << "Índice inválido." << endl;
     }
 
     return 0;
