@@ -1,0 +1,10 @@
+1) la funcion recorre recursivamente hasta el ultimo nodo de la lista, y luego al volver imprime los datos,
+ esto genera un recorrido en sentido inverso al orden de la lista.
+El proposito es imprimir los datos de la
+ lista enlazada desde el último al primero.
+2) La función suma uno por cada nodo, recorriendo toda la lista recursivamente, el proposito es
+ retornar
+ la cantidad de nodos (longitud) de la lista enlazada.
+3)La función recorre hasta llegar al nodo que no tiene siguiente, osea el último nodo.
+Retorna un puntero
+ al último nodo de la lista enlazada.
